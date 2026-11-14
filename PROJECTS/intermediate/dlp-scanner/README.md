@@ -1,119 +1,236 @@
-```ruby
-$$$$$$$\  $$\       $$$$$$$\         $$$$$$\   $$$$$$\   $$$$$$\  $$\   $$\ $$\   $$\ $$$$$$$$\ $$$$$$$\  
-$$  __$$\ $$ |      $$  __$$\       $$  __$$\ $$  __$$\ $$  __$$\ $$$\  $$ |$$$\  $$ |$$  _____|$$  __$$\ 
-$$ |  $$ |$$ |      $$ |  $$ |      $$ /  \__|$$ /  \__|$$ /  $$ |$$$$\ $$ |$$$$\ $$ |$$ |      $$ |  $$ |
-$$ |  $$ |$$ |      $$$$$$$  |      \$$$$$$\  $$ |      $$$$$$$$ |$$ $$\$$ |$$ $$\$$ |$$$$$\    $$$$$$$  |
-$$ |  $$ |$$ |      $$  ____/        \____$$\ $$ |      $$  __$$ |$$ \$$$$ |$$ \$$$$ |$$  __|   $$  __$$< 
-$$ |  $$ |$$ |      $$ |            $$\   $$ |$$ |  $$\ $$ |  $$ |$$ |\$$$ |$$ |\$$$ |$$ |      $$ |  $$ |
-$$$$$$$  |$$$$$$$$\ $$ |            \$$$$$$  |\$$$$$$  |$$ |  $$ |$$ | \$$ |$$ | \$$ |$$$$$$$$\ $$ |  $$ |
-\_______/ \________|\__|             \______/  \______/ \__|  \__|\__|  \__|\__|  \__|\________|\__|  \__|
+# DLP Scanner — Data Loss Prevention Tool
+
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-AGPL--3.0-purple.svg)
+![Security](https://img.shields.io/badge/Domain-Cybersecurity-red)
+![Project](https://img.shields.io/badge/Type-Data%20Protection-blue)
+
+**A Python-based Data Loss Prevention (DLP) scanner designed to detect sensitive information across files, databases, and network traffic.**
+
+DLP Scanner helps identify exposed Personally Identifiable Information (PII), credentials, financial records, and Protected Health Information (PHI), supporting security assessments and data protection compliance.
+
+## Overview
+
+The tool provides multiple scanning capabilities:
+
+- **File scanning:** Detect sensitive data in PDF, DOCX, XLSX, CSV, JSON, XML, YAML, Parquet, Avro, archives, and email files.
+- **Database scanning:** Inspect PostgreSQL, MySQL, MongoDB, and SQLite databases using schema introspection and data sampling.
+- **Network traffic scanning:** Analyze PCAP/PCAPNG captures with protocol parsing, TCP stream reassembly, and DNS exfiltration detection.
+- **Confidence scoring:** Combine pattern matching, checksum validation, contextual analysis, and entity co-occurrence.
+- **Compliance mapping:** Associate findings with HIPAA, PCI DSS, GDPR, CCPA, SOX, GLBA, and FERPA.
+- **Reporting:** Export findings to Console, JSON, SARIF 2.1.0, and CSV.
+
+## Architecture & Detection
+
+The scanner uses a layered detection pipeline:
+
+1. Data extraction from supported sources.
+2. Pattern matching and sensitive-data identification.
+3. Checksum validation (Luhn, Mod-97, Mod-11).
+4. Contextual keyword and proximity analysis.
+5. Confidence scoring and severity classification.
+6. Sensitive-value redaction and compliance mapping.
+7. Structured report generation.
+
+## Technology Stack
+
+| Component | Technologies |
+|---|---|
+| Language | Python 3.12+ |
+| CLI | Typer, Rich |
+| Detection | Regex, checksum validation, Shannon entropy |
+| Configuration | Pydantic, YAML |
+| File processing | PyMuPDF, python-docx, openpyxl, xlrd |
+| Databases | PostgreSQL, MySQL, MongoDB, SQLite |
+| Network analysis | dpkt, TCP reassembly, protocol identification |
+| Testing | pytest, Hypothesis |
+| Code quality | Ruff, mypy, YAPF |
+
+## Project Structure
+
+```text
+dlp-scanner/
+├── learn/
+│   ├── 00-OVERVIEW.md
+│   ├── 01-CONCEPTS.md
+│   ├── 02-ARCHITECTURE.md
+│   ├── 03-IMPLEMENTATION.md
+│   └── 04-CHALLENGES.md
+├── src/
+│   └── dlp_scanner/
+├── tests/
+├── .dlp-scanner.yml
+├── .env.example
+├── .gitignore
+├── install.sh
+├── justfile
+├── pyproject.toml
+├── uv.lock
+└── README.md
 ```
 
-[![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%2323-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/intermediate/dlp-scanner)
-[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
-[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
+## Installation
 
-> Data Loss Prevention scanner for files, databases, and network traffic.
-
-*This is a quick overview. Security theory, architecture, and full walkthroughs are in the [learn modules](#learn).*
-
-## What It Does
-
-- Scans files (PDF, DOCX, XLSX, CSV, JSON, XML, YAML, Parquet, Avro, archives, emails) for PII, credentials, financial data, and PHI
-- Scans databases (PostgreSQL, MySQL, MongoDB, SQLite) with schema introspection and sampling
-- Scans network captures (PCAP/PCAPNG) with protocol parsing, TCP reassembly, and DNS exfiltration detection
-- Confidence scoring pipeline: regex match, checksum validation (Luhn, Mod-97, Mod-11), context keyword proximity, entity co-occurrence
-- Maps findings to compliance frameworks (HIPAA, PCI-DSS, GDPR, CCPA, SOX, GLBA, FERPA)
-- Reports in console (Rich tables), JSON, SARIF 2.1.0, or CSV
-
-## Quick Start
+### Linux / macOS
 
 ```bash
+git clone https://github.com/hamzaatlili/dlp-scanner-Copier.git
+cd dlp-scanner-Copier
+
 bash install.sh
-dlp-scan file ./data
 ```
 
-> [!TIP]
-> This project uses [`just`](https://github.com/casey/just) as a command runner. Type `just` to see all available commands.
->
-> Install: `curl -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin`
+### Python environment
+
+If you prefer manual installation:
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment:
+
+**Linux / macOS**
+```bash
+source .venv/bin/activate
+```
+
+**Windows PowerShell**
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the project according to its `pyproject.toml` configuration:
+
+```bash
+pip install -e .
+```
 
 ## Usage
 
+### Scan files
+
 ```bash
-dlp-scan file ./data/employees/              # scan a directory
-dlp-scan file ./report.pdf -f json           # scan a file, JSON output
-dlp-scan db postgres://user:pass@host/db     # scan PostgreSQL
-dlp-scan db sqlite:///path/to/local.db       # scan SQLite
-dlp-scan network capture.pcap               # scan network traffic
-dlp-scan file ./data -f sarif -o results.sarif  # SARIF for CI/CD
-dlp-scan report convert results.json -f csv  # convert report format
-dlp-scan report summary results.json         # print summary stats
+dlp-scan file ./data/
 ```
 
-### Global Options
+Scan a specific file:
 
-```
---config, -c    Path to YAML config file
---verbose, -v   Enable debug logging
---version       Show version
+```bash
+dlp-scan file ./data/employees.csv
 ```
 
-### Output Formats
+### Scan databases
 
-| Format | Flag | Use Case |
-|--------|------|----------|
-| Console | `-f console` | Interactive review with Rich tables |
-| JSON | `-f json` | Structured analysis and archival |
-| SARIF | `-f sarif` | GitHub code scanning, CI/CD integration |
-| CSV | `-f csv` | Compliance team export, spreadsheet import |
+```bash
+dlp-scan db postgres://user:password@host/database
+```
 
-## Stack
+```bash
+dlp-scan db sqlite:///path/to/database.db
+```
 
-**Language:** Python 3.12+
+### Scan network traffic
 
-**CLI:** Typer 0.15+ with Rich integration
+```bash
+dlp-scan network capture.pcap
+```
 
-**Detection:** Regex + checksum validators + Shannon entropy + context keyword scoring
+### Generate reports
 
-**File Formats:** PyMuPDF, python-docx, openpyxl, xlrd, defusedxml, lxml, pyarrow, fastavro, extract-msg
+JSON:
 
-**Databases:** asyncpg (PostgreSQL), aiomysql (MySQL), pymongo async (MongoDB), aiosqlite (SQLite)
+```bash
+dlp-scan file ./data/ -f json
+```
 
-**Network:** dpkt (PCAP parsing), TCP reassembly, DPI protocol identification, DNS exfiltration heuristics
+SARIF:
 
-**Config:** Pydantic 2.10+ models with YAML config loading (ruamel.yaml)
+```bash
+dlp-scan file ./data/ -f sarif -o results.sarif
+```
 
-**Quality:** ruff, mypy (strict), yapf, pytest + hypothesis, structlog
+CSV:
+
+```bash
+dlp-scan report convert results.json -f csv
+```
+
+View report summary:
+
+```bash
+dlp-scan report summary results.json
+```
+
+## Output Formats
+
+| Format | Purpose |
+|---|---|
+| Console | Interactive terminal output |
+| JSON | Structured security findings |
+| SARIF 2.1.0 | Integration with code scanning and CI/CD |
+| CSV | Compliance reviews and spreadsheet analysis |
 
 ## Configuration
 
-Copy `.dlp-scanner.yml` to your project root and customize. Key settings:
+The scanner can be customized through `.dlp-scanner.yml`.
+
+Example:
 
 ```yaml
 detection:
-  min_confidence: 0.20        # minimum score to report
-  enable_rules: ["*"]         # glob patterns for rule IDs
+  min_confidence: 0.20
+  enable_rules: ["*"]
   allowlists:
-    values: ["123-45-6789"]   # suppress known test values
+    values:
+      - "123-45-6789"
 
 output:
-  format: "console"           # console, json, sarif, csv
-  redaction_style: "partial"  # partial, full, none
+  format: "console"
+  redaction_style: "partial"
 ```
 
-## Learn
+Review the configuration file before running scans in production environments.
 
-This project includes step-by-step learning materials covering security theory, architecture, and implementation.
+## Testing
 
-| Module | Topic |
-|--------|-------|
-| [00 - Overview](learn/00-OVERVIEW.md) | Prerequisites and quick start |
-| [01 - Concepts](learn/01-CONCEPTS.md) | DLP theory and real-world breaches |
-| [02 - Architecture](learn/02-ARCHITECTURE.md) | System design and data flow |
-| [03 - Implementation](learn/03-IMPLEMENTATION.md) | Code walkthrough |
-| [04 - Challenges](learn/04-CHALLENGES.md) | Extension ideas and exercises |
+Run the test suite using:
+
+```bash
+pytest
+```
+
+For verbose output:
+
+```bash
+pytest -v
+```
+
+## Learning Resources
+
+The `learn/` directory contains educational documentation:
+
+| Module | Description |
+|---|---|
+| 00 - Overview | Prerequisites and quick start |
+| 01 - Concepts | DLP fundamentals and real-world security incidents |
+| 02 - Architecture | System architecture and data flow |
+| 03 - Implementation | Code walkthrough |
+| 04 - Challenges | Practical exercises and extension ideas |
+
+## Security & Responsible Use
+
+- Only scan files, databases, and network traffic you are authorized to inspect.
+- Avoid committing real credentials, API keys, personal data, or production datasets.
+- Use synthetic data for testing and demonstrations.
+- Review findings before taking remediation actions.
 
 ## License
 
-[AGPLv3](https://www.gnu.org/licenses/agpl-3.0)
+This project is distributed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+**Developed for cybersecurity learning, sensitive-data discovery, and data protection research.**

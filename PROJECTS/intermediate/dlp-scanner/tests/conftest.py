@@ -81,7 +81,7 @@ def temp_dir_with_pii(
 
     json_path = temp_dir / "config.json"
     json_path.write_text(
-        '{"api_key": "sk_live_abc123def456ghi789jkl012mno345"}\n'
+    '{"api_key": "YOUR_API_KEY_PLACEHOLDER"}\n'
     )
 
     return temp_dir

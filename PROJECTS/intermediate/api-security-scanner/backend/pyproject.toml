@@ -15,7 +15,7 @@ dependencies = [
     "python-multipart===0.0.33",
     # Database
     "sqlalchemy==2.1.6",
-    "psycopg2-binary==2.9.13",
+    "psycopg[binary]>=3.2,<4",
     "alembic>=1.18.3",
     # Security
     "slowapi==0.1.10",

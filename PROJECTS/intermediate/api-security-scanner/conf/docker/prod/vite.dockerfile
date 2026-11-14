@@ -4,7 +4,7 @@
 
 FROM node:25-slim AS builder
 
-RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
+RUN npm install --global pnpm@10.29.1
 
 WORKDIR /app
 
